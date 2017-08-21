@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+	PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+	"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<configuration>
+	<!-- 加载属性文件-->
+	<properties resource="db.properties"/>
+	<!-- 设置全局参数 -->
+	<!-- <settings>
+		<setting name="" value=""/>
+	</settings> -->
+	<!-- 定义别名 -->
+	<!-- <typeAliases>
+		<typeAlias type="cn.sanduo.domain.User" alias="user"/>
+	</typeAliases> -->
+	
+	<!-- 批量定义别名 -->
+	<typeAliases>
+		<!-- 别名为类名首字母大小写都行 -->
+		<package name="cn.sanduo.domain"/>
+	</typeAliases>
+	
+	<!-- 和spring整合后 environments配置将废除 -->
+	<environments default="development">
+		<environment id="development">
+			<!-- 使用jdbc事务管理 -->
+			<transactionManager type="JDBC" />
+			<!-- 数据库连接池 -->
+			<dataSource type="POOLED">
+				<property name="driver" value="${jdbc.driver}" />
+				<property name="url"
+					value="${jdbc.url}" />
+				<property name="username" value="${jdbc.username}" />
+				<property name="password" value="${jdbc.password}" />
+			</dataSource>
+		</environment>
+	</environments>
+	
+	<!-- 加载mapper.xml -->
+	<mappers>
+		<!-- 配置映射 -->
+		<mapper resource="sqlmap/User.xml"/>
+		<mapper resource="sqlmap/UserMapper.xml"/>
+		<mapper resource="sqlmap/UserMapperInnerPojo.xml"/>
+		<mapper resource="sqlmap/UserMapperOuter.xml"/>
+		<!-- 
+			class:指定mapper接口的类：
+			要求UserMapper.xml和该接口的java文件在同一级目录下
+		 -->
+<!-- 		<mapper class="cn.sanduo.mapper.UserMapper"/>
+		<mapper url=""/> -->
+		<!--  
+			包扫描：name：指定mapper接口所在包，包扫描会自动扫描接口
+			要求UserMapper.xml和该接口的java文件在同一级目录下
+		-->
+		<!-- <package name="cn.sanduo.mapper"/> -->
+		
+	</mappers>
+	
+	
+</configuration>
+

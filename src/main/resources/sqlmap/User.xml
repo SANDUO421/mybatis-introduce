@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 
+一个mapper映射文件是以sql语句为单位进行配置，最终将sql语句封装到MappedStatement对象中
+namespace命名空间作用是更好对sql语句进行隔离，方便管理sql
+
+注意：后期讲mybatis的mapper代理开发方式时namespace有特殊的作用？？？
+ -->
+<mapper namespace="test">
+
+<!-- 根据用户id查询一个用户信息 
+select：用于查询，主要配置sql语句、输入参数类型、输出结果类型
+最终该 select 标签 中所配置的内容会封装到MappedStatement对象，可以将该 select称为是一个Statement
+id：唯 一标识 namespace下的一个sql语句，将id称为Statement的id
+
+parameterType：指定输入参数的类型（简单类型、自定义pojo）
+#{}：表示一个占位符号，占位符号可以防止sql注入
+#{value}：value表示接收输入参数的值，如果接收的输入参数是简单类型，#{}里边可以写value或其它的名称
+resultType：将sql查询结果集映射成java对象
+将多个列的值映射到一个对象中，需要定义的pojo，resultType映射规则是sql查询列名和pojo的属性名必须一致方可完成映射
+resultType 指定单条记录所映射的java对象
+
+-->
+<select id="findUserById" parameterType="int" resultType="cn.sanduo.domain.User">
+	SELECT * FROM USER WHERE id = #{id}
+</select>
+
+<select id="findUserByName" parameterType="String" resultType="cn.sanduo.domain.User">
+	SELECT * FROM USER WHERE name = #{name}
+</select>
+
+<select id="findUserByLikeName" parameterType="String" resultType="cn.sanduo.domain.User">
+	<!-- SELECT * FROM USER WHERE name like '%${value}%' -->
+	SELECT * FROM USER WHERE name like #{name}
+</select>
+<!-- 添加用户 -->
+<!-- <insert id=""></insert> -->
+<insert id="InsertUser" parameterType="cn.sanduo.domain.User">
+	<!-- 返回主键类型:inset之后返回 -->
+	<selectKey keyProperty="id" order="AFTER" resultType="java.lang.Integer">
+		select LAST_INSERT_ID()
+	</selectKey>
+<!-- 	<selectKey keyProperty="id" order="BEFORE" resultType="java.lang.String">
+		select uuid()
+	</selectKey> -->
+	Insert into user values(#{id},#{name},#{telephone});
+</insert>
+
+<!-- 删除用户 -->
+<delete id="deleteNameById" parameterType="Integer">
+	delete from user where id = #{id}
+</delete>
+<!-- 更新用户 -->
+
+<update id="updateById" parameterType="cn.sanduo.domain.User">
+	update user set name = #{name},telephone = #{telephone} where id = #{id}
+</update>
+
+</mapper>

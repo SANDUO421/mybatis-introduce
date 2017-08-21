@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--输入映射  -->
+<mapper namespace="cn.sanduo.mapper.UserMapperOutter">
+
+	<!-- 综合条件查询：模糊查询和精确查询 -->
+	<select id="findUserCount" parameterType="cn.sanduo.domain.QueryUserPo" resultType="int">
+		SELECT count(*) FROM USER WHERE name like #{user.name} and sex = #{user.sex}
+	</select>
+	<!--根据id查询完成resultmap映射 -->
+	<!-- 
+		{}里面的是hashmap的key
+		
+	 -->
+	 	<!-- 使用resultMap将列名和pojo属	性之间映射
+		type是最终映射的pojo类
+		id:查询结构及的唯一标识列
+	 -->
+ 	<resultMap type="user" id="queryUserResultMap">
+ 		<!-- 多个标识组成一个id可以定义多个 -->
+ 		<id column="id_" property="id"/>
+ 		<!--result可以标识普通列-->
+ 		<result column="name_" property="name"/>
+ 		<result column="sex_" property="sex"/>
+ 		<result column="telephone_" property="telephone"/>
+ 	</resultMap>
+	
+	<select id="findUserByIdResultIsHashMap" parameterType="int" resultMap="queryUserResultMap">
+		SELECT id id_ ,name name_,sex sex_,telephone telephone_ FROM USER WHERE id = #{id}
+	</select>
+
+</mapper>
+

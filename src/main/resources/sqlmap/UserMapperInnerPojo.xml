@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--输入映射  -->
+<mapper namespace="cn.sanduo.mapper.UserMapperInner">
+
+	<!-- 综合条件查询：模糊查询和精确查询 -->
+	<select id="findUserByNameAndSex" parameterType="cn.sanduo.domain.QueryUserPo" resultType="user">
+		SELECT * FROM USER WHERE name like #{user.name} and sex = #{user.sex}
+	</select>
+	<!--hashmap实现输入传值 -->
+	<!-- 
+		{}里面的是hashmap的key
+	 -->
+	<select id="findUserByHashMap" parameterType="hashmap" resultType="user">
+		SELECT * FROM USER WHERE name like #{name} and sex = #{sex}
+	</select>
+	
+</mapper>

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!--输入映射  -->
+<mapper namespace="cn.sanduo.mapper.UserMapperDynamicSql">
+
+	<!-- 定义SQL片段 -->
+	<sql id="query_user_where_byNameAndSex">
+		<!-- 相当于SQL中的where关键字可以将第一个and去掉 -->
+		<where>
+			<if test="user != null">
+				<if test="user.name != null and user.name != ''">
+					and name like #{user.name}
+				</if>
+				<if test="user.sex != null and user.sex != ''">
+					and sex = #{user.sex}
+				</if>
+			</if>
+		</where>
+	</sql>
+	<sql id="query_user_foreach_byNameAndSex">
+		<where>
+			<if test="user != null">
+				<if test="user.name != null and user.name != ''">
+					and name like #{user.name}
+				</if>
+				<if test="user.sex != null and user.sex != ''">
+					and sex = #{user.sex}
+				</if>
+				  /*
+					拼接and和in
+					collection:接收参数的集合
+					Item：每次循环定义一个对象名
+				  */
+				<foreach collection="ids" item="id" open="and  id in (" close=")" separator=",">
+					#{id}
+				</foreach>
+			</if>
+		</where>
+	</sql>
+
+	<!-- 综合条件查询：模糊查询和精确查询 -->
+	<select id="findUserByNameAndSex" parameterType="queryUserPo" resultType="user">
+		SELECT id ,name ,sex ,telephone FROM USER 
+		<!-- 引入SQL片段 -->
+		<include refid="query_user_where_byNameAndSex"/>
+	</select>
+	<!-- 查询总数 -->
+	<select id="findUserCount" parameterType="queryUserPo" resultType="int">
+		SELECT count(*) FROM USER 
+		<!-- 相当于SQL中的where关键字可以将第一个and去掉 -->
+		<!-- 引入SQL片段 -->
+		<include refid="query_user_where_byNameAndSex"/>
+	</select>
+	<select id="findUserByForeach" parameterType="queryUserPo" resultType="user">
+		/*select * from user where name like %马% and sex = "男" and id in(ids)*/
+		SELECT * FROM  USER
+		<include refid="query_user_foreach_byNameAndSex"/>
+	</select>
+</mapper>
+
